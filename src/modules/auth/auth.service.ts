@@ -21,13 +21,13 @@ export class AuthService {
         64,
         'SHA512',
       ).toString('base64');
-      console.log(user)
       if (user.password === CryptedPassword) {
         const cookie = await this.login({ id: content.id });
 
         return cookie;
       }
     } catch (error) {
+      console.log(error)
       throw new UnauthorizedException();
     }
 

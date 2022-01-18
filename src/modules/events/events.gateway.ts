@@ -41,4 +41,10 @@ export class EventsGateway {
     const recipientId = await this.eventService.sendMessage(data.nickname);
     client.to(recipientId.SocketId).emit('message', { message: data.message });
   }
+
+  @SubscribeMessage('logout')
+  async handleLogout(client) {
+    const result = await this.eventService.logout(client);
+    client.emit('logout', { message: result });
+  }
 }

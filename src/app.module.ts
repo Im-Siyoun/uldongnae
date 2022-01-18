@@ -4,10 +4,13 @@ import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as joi from 'joi';
 
+import { AdModule } from './modules/advertisement/advertisement.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BusinessesModule } from './modules/business/business.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { EventsModule } from './modules/events/events.module';
+import { GatheringsModule } from './modules/gathering/gathering.module';
+import { LandmarksModule } from './modules/landmarks/landmarks.module';
 import { AdminModule } from './modules/management/management.module';
 import { PostsModule } from './modules/post/posts.module';
 import { RolesGuard } from './modules/roles/roles.guard';
@@ -17,6 +20,7 @@ import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
+    AdModule,
     UsersModule,
     BusinessesModule,
     PostsModule,
@@ -26,6 +30,8 @@ import { UsersModule } from './modules/users/users.module';
     TransactionsModule,
     CommentsModule,
     AdminModule,
+    LandmarksModule,
+    GatheringsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:

@@ -1,7 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
-export class Advertisement {
+export class Ad {
   @Prop({
     required: true,
     type: String,
@@ -49,6 +49,8 @@ export class Advertisement {
     type: String,
   })
   state: string;
-
-  
 }
+
+export type AdDocument = Ad & Document;
+
+export const AdSchema = SchemaFactory.createForClass(Ad);

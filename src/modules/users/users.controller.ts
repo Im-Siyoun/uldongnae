@@ -74,14 +74,26 @@ export class UsersController {
   }
 
   @Post('/words/:id')
-  async addword(@Param('id') id: string,
-  @Body(ValidationPipe) word: string): Promise<User> {
+  async addword(
+    @Param('id') id: string,
+    @Body(ValidationPipe) word: string,
+  ): Promise<User> {
     return this.userService.addword(id, word);
   }
 
   @Patch('/nickname/:id')
-  async updatenickname(@Param('id') id: string,
-  @Body(ValidationPipe) nickname: string): Promise<User> {
+  async updatenickname(
+    @Param('id') id: string,
+    @Body(ValidationPipe) nickname: string,
+  ): Promise<User> {
     return this.userService.updateNickname(id, nickname);
+  }
+
+  @Get('/distance/:id')
+  async getdistance(
+    @Param('id') id: string,
+    @Body() data: any,
+  ): Promise<User> {
+    return this.userService.getDistance(id, data.id);
   }
 }

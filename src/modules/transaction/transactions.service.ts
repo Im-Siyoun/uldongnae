@@ -37,15 +37,6 @@ export class TransactionsService {
     return transaction;
   }
 
-  async findByOriginalId(original: ObjectId): Promise<Transaction> {
-    const transaction = await this.transactionModel.findOne({ original });
-    if (!transaction) {
-      throw new Error('Transaction not found');
-    }
-
-    return transaction;
-  }
-
   async update(
     id: string,
     transactiondto: UpdateTransactionDto,

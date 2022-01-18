@@ -22,7 +22,6 @@ export class Gathering {
 
   @Prop({
     type: Array,
-    required: true,
   })
   image: Array<string>;
 

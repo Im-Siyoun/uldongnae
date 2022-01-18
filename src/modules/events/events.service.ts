@@ -25,10 +25,19 @@ export class EventsService {
 
   enterChat(client: Socket, chatid: string) {
     client.data.roomId = chatid;
-    client.rooms.clear();
+    console.log(client.rooms)
     client
       .to(chatid)
       .emit('enterChat', { message: `${chatid} 채팅방에 입장하셨습니다.` });
+  }
+
+  async logout(client: Socket) {
+    client.rooms.clear();
+    const result = await this.participantModel.findOneAndDelete({
+      SocketId: client.id,
+    });
+
+    return result;
   }
 
   async register(content: CreateParticipantDto): Promise<Participant> {

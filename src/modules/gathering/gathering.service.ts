@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 import { CreateGatheringDto } from './dto/create-gathering.dto';
+import { UpdateGatheringDto } from './dto/update-gathering.dto';
 import { Gathering, GatheringDocument } from './schemas/gathering.schema';
 
 @Injectable()
-export class AdminService {
+export class GatheringService {
   constructor(
     @InjectModel(Gathering.name)
     private gatheringModel: Model<GatheringDocument>,
@@ -36,8 +37,8 @@ export class AdminService {
     return gathering;
   }
 
-  async findByOriginalId(original: ObjectId): Promise<Gathering> {
-    const gathering = await this.gatheringModel.findOne({ original });
+  async findByWriter(writer: string): Promise<Gathering> {
+    const gathering = await this.gatheringModel.findOne({ writer });
     if (!gathering) {
       throw new Error('Gathering not found');
     }
@@ -53,6 +54,12 @@ export class AdminService {
       { id },
       gatheringdto,
     );
+
+    return gathering;
+  }
+
+  async delete(id: string): Promise<Gathering> {
+    const gathering = await this.gatheringModel.findOneAndDelete({ id });
 
     return gathering;
   }
