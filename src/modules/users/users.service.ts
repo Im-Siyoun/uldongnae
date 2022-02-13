@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
 import { pbkdf2Sync, randomBytes } from 'crypto';
+import { readFileSync } from 'fs';
 import moment from 'moment';
 import { Model } from 'mongoose';
 
@@ -13,11 +14,22 @@ import { User, UserDocument } from './schemas/users.schema';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  async nickname(): Promise<string> {
+    const rawdata = readFileSync('../json/name.json', 'utf8');
+    const name = JSON.parse(rawdata);
+    const { adjective } = name;
+    const { noun } = name;
+    const adjectiveIndex = Math.floor(Math.random() * adjective.length);
+    const nounIndex = Math.floor(Math.random() * noun.length);
+
+    return `${adjective[adjectiveIndex]}${noun[nounIndex]}`;
+  }
+
   async create(userdto: CreateUserDto): Promise<User> {
     const salt = randomBytes(16).toString('base64');
     const user = {
       id: userdto.id,
-      nickname: userdto.nickname,
+      nickname: userdto.nickname ? userdto.nickname : await this.nickname(),
       password: pbkdf2Sync(
         userdto.password,
         salt,
@@ -81,6 +93,7 @@ export class UsersService {
     if (!response.data.results) {
       throw new Error('location not found');
     }
+    user.recentlyUpdated = new Date();
     user.region = response.data.results[2].formatted_address;
     await this.userModel.findOneAndUpdate({ id }, user);
 

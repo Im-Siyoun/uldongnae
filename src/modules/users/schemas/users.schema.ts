@@ -93,6 +93,11 @@ export class User {
     default: [],
   })
   words: string[];
+
+  @Prop({
+    type: Date,
+  })
+  recentlyUpdated: Date;
 }
 
 export type UserDocument = User & Document;

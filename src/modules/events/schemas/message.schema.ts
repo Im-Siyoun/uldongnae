@@ -1,20 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
-export class Participant {
-  @Prop({
-    type: String,
-    required: true,
-  })
-  SocketId: string;
-
+export class Message {
   @Prop({
     type: String,
     required: true,
   })
   nickname: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
+  message: string;
 }
 
-export type ParticipantDocument = Participant & Document;
+export type MessageDocument = Message & Document;
 
-export const ParticipantSchema = SchemaFactory.createForClass(Participant);
+export const MessageSchema = SchemaFactory.createForClass(Message);

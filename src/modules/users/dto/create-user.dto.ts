@@ -13,6 +13,7 @@ export class CreateUserDto {
   readonly salt: string;
 
   @IsString()
+  @IsOptional()
   readonly nickname: string;
 
   @IsString()

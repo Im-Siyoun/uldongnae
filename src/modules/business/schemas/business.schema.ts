@@ -32,7 +32,7 @@ export class Business {
   @Prop({
     type: String,
   })
-  image: string;
+  image: string[];
 
   @Prop({
     type: String,

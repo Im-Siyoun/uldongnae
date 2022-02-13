@@ -1,4 +1,6 @@
+import { UseFilters } from '@nestjs/common';
 import {
+  BaseWsExceptionFilter,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -26,20 +28,23 @@ export class EventsGateway {
     this.eventService.createChat(client);
   }
 
+  @UseFilters(new BaseWsExceptionFilter())
   @SubscribeMessage('login')
   async handlelogin(client, data) {
-    const result = this.eventService.register({
+    const result = await this.eventService.register({
       SocketId: client.id,
       nickname: data.name,
     });
 
-    client.emit('register', { message: result });
+    await Promise.resolve(result).then((message) => {
+      client.emit('login', { message });
+    });
   }
 
   @SubscribeMessage('message')
   async handleMessage(client, data) {
-    const recipientId = await this.eventService.sendMessage(data.nickname);
-    client.to(recipientId.SocketId).emit('message', { message: data.message });
+    const result = await this.eventService.sendMessage(client, data);
+    client.emit('message', { message: 'success' });
   }
 
   @SubscribeMessage('logout')
