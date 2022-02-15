@@ -9,7 +9,7 @@ import { Server } from 'socket.io';
 
 import { EventsService } from './events.service';
 
-@WebSocketGateway(80, {
+@WebSocketGateway(8080, {
   transports: ['websocket'],
 })
 export class EventsGateway {

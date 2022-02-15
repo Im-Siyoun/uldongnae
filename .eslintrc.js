@@ -34,5 +34,6 @@ module.exports = {
     'max-len': ['error', { code: 80, tabWidth: 2 }],
     'newline-before-return': 'error',
     'no-useless-constructor': 'off',
+    'no-param-reassign': 'off',
   },
 };

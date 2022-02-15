@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Ad {
   @Prop({
-    required: true,
-    type: String,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
   writer: string;
 
@@ -15,8 +16,8 @@ export class Ad {
   exhibition: number;
 
   @Prop({
-    required: true,
-    type: String,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Post',
   })
   postId: string;
 

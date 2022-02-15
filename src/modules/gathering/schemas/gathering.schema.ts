@@ -1,10 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Gathering {
   @Prop({
-    type: String,
-    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
   writer: string;
 

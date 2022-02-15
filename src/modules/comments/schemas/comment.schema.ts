@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId } from 'mongoose';
-import { Role } from 'src/modules/roles/role.enum';
+import { Schema as MongooseSchema, Types } from 'mongoose';
 
 @Schema({ timestamps: true, versionKey: false })
 export class Comment {
@@ -11,16 +10,16 @@ export class Comment {
   content: string;
 
   @Prop({
-    type: String,
-    required: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
-  writer: ObjectId;
+  writer: string;
 
   @Prop({
     type: String,
     required: true,
   })
-  original: ObjectId;
+  original: string;
 }
 
 export type CommentDocument = Comment & Document;

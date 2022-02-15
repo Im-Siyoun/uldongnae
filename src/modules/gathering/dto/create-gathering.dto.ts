@@ -2,6 +2,7 @@ import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateGatheringDto {
   @IsString()
+  @IsOptional()
   writer: string;
 
   @IsString()

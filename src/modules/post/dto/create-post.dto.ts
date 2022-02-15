@@ -4,8 +4,9 @@ export class CreatePostDto {
   @IsString()
   readonly content: string;
 
-  @IsMongoId()
-  readonly writer: string;
+  @IsOptional()
+  @IsString()
+  writer?: string;
 
   @IsString()
   readonly title: string;

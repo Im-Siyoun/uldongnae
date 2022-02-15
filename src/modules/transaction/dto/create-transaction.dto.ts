@@ -16,7 +16,7 @@ export class CreateTransactionDto {
   readonly content: string;
 
   @IsString()
-  readonly writer: string;
+  writer: string;
 
   @IsString()
   readonly category: string;

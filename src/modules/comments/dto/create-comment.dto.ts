@@ -1,12 +1,13 @@
-import { IsMongoId, IsString } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class CreateCommentDto {
   @IsString()
   readonly content: string;
 
-  @IsMongoId()
-  readonly writer: string;
+  @IsString()
+  @IsOptional()
+  writer: string;
 
-  @IsMongoId()
+  @IsString()
   readonly original: string;
 }
