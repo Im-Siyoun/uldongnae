@@ -7,6 +7,8 @@ export class CreateCouponDto {
   @IsArray()
   permissions: Array<string>;
 
+  Issuer?: string;
+
   @IsString()
   expiryDate: string;
 }

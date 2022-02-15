@@ -27,7 +27,6 @@ export class AuthService {
         return cookie;
       }
     } catch (error) {
-      console.log(error)
       throw new UnauthorizedException();
     }
 

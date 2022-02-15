@@ -7,13 +7,12 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { Role } from 'src/modules/roles/role.enum';
-import { Roles } from 'src/modules/roles/roles.decorator';
 import { ValidationPipe } from 'src/pipes';
 
+import { AuthService } from '../auth/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/users.schema';
@@ -21,7 +20,10 @@ import { UsersService } from './users.service';
 
 @Controller('/users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   @HttpCode(201)
@@ -39,61 +41,79 @@ export class UsersController {
     return this.userService.findAll();
   }
 
-  @Get('/:id')
   @HttpCode(200)
-  async find(@Param('id') id: string): Promise<User> {
-    return this.userService.find(id);
+  async find(@Req() request: any): Promise<User> {
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.find(json.id);
   }
 
-  @Patch('/:id')
   @HttpCode(200)
   async update(
-    @Param('id') id: string,
+    @Req() request: any,
     @Body(ValidationPipe) updateUserDTO: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.update(id, updateUserDTO);
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.update(json.id, updateUserDTO);
   }
 
-  @Delete('/:id')
   @HttpCode(200)
-  async delete(@Param('id') id: string): Promise<User> {
-    return this.userService.delete(id);
+  async delete(@Req() request: any): Promise<User> {
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.delete(json.id);
   }
 
-  @Get('/locate/:id')
-  async locate(@Param('id') id: string): Promise<User> {
-    return this.userService.track(id);
+  @Get('/locate')
+  async locate(@Req() request: any): Promise<User> {
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.track(json.id);
   }
 
-  @Post('/interest/:id')
+  @Post('/interest')
   async addinterest(
-    @Param('id') id: string,
+    @Req() request: any,
     @Body(ValidationPipe) data: any,
   ): Promise<User> {
-    return this.userService.addinterest(id, data.post);
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.addinterest(json.id, data.post);
   }
 
-  @Post('/words/:id')
+  @Post('/words')
   async addword(
-    @Param('id') id: string,
+    @Req() request: any,
     @Body(ValidationPipe) word: string,
   ): Promise<User> {
-    return this.userService.addword(id, word);
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.addword(json.id, word);
   }
 
-  @Patch('/nickname/:id')
+  @Patch('/nickname')
   async updatenickname(
-    @Param('id') id: string,
+    @Req() request: any,
     @Body(ValidationPipe) nickname: string,
   ): Promise<User> {
-    return this.userService.updateNickname(id, nickname);
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.updateNickname(json.id, nickname);
   }
 
-  @Get('/distance/:id')
-  async getdistance(
-    @Param('id') id: string,
-    @Body() data: any,
-  ): Promise<User> {
-    return this.userService.getDistance(id, data.id);
+  @Get('/distance')
+  async getdistance(@Req() request: any, @Body() data: any): Promise<User> {
+    const jwt = request.headers.authorization.replace('Bearer ', '');
+    const json = await this.authService.verifyToken(jwt);
+
+    return this.userService.getDistance(json.id, data.id);
   }
 }

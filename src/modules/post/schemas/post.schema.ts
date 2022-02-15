@@ -19,7 +19,7 @@ export class Post {
     type: String,
     required: true,
   })
-  writer: ObjectId;
+  writer: string;
 
   @Prop({
     type: String,

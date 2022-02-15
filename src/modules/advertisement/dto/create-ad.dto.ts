@@ -1,8 +1,9 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAdDto {
   @IsString()
-  writer: string;
+  @IsOptional()
+  writer?: string;
 
   @IsNumber()
   exhibition: number;

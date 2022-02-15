@@ -14,6 +14,12 @@ export class Coupon {
     type: MongooseSchema.Types.ObjectId,
     ref: 'User',
   })
+  Issuer: string;
+
+  @Prop({
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+  })
   permissions: string[];
 
   @Prop({

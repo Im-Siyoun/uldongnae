@@ -31,7 +31,7 @@ export class AdService {
   async find(id: string): Promise<Ad> {
     const ad = await this.adModel.findOne({ id });
     if (!ad) {
-      throw new Error('Ad not found');
+      throw new Error('광고를 찾을 수 없습니다.');
     }
 
     return ad;
@@ -40,21 +40,36 @@ export class AdService {
   async findByWriter(writer: string): Promise<Ad> {
     const ad = await this.adModel.findOne({ writer });
     if (!ad) {
-      throw new Error('Ad not found');
+      throw new Error('광고를 찾을 수 없습니다.');
     }
 
     return ad;
   }
 
-  async update(id: string, addto: UpdateAdDto): Promise<Ad> {
-    const ad = await this.adModel.findOneAndUpdate({ id }, addto);
+  async update(userid: string, id: string, addto: UpdateAdDto): Promise<Ad> {
+    const ad = await this.adModel.findOne({ id });
+    if (!ad) {
+      throw new Error('광고를 찾을 수 없습니다.');
+    } else if (ad.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+    const result = await this.adModel.findOneAndUpdate(
+      { id },
+      addto,
+    );
 
-    return ad;
+    return result;
   }
 
-  async delete(id: string): Promise<Ad> {
-    const ad = await this.adModel.findOneAndDelete({ id });
+  async delete(userid: string, id: string): Promise<Ad> {
+    const ad = await this.adModel.findOne({ id });
+    if (!ad) {
+      throw new Error('광고를 찾을 수 없습니다.');
+    } else if (ad.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+    const result = await this.adModel.findOneAndDelete({ id });
 
-    return ad;
+    return result;
   }
 }
