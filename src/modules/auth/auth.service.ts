@@ -22,12 +22,11 @@ export class AuthService {
         'SHA512',
       ).toString('base64');
       if (user.password === CryptedPassword) {
-        const cookie = await this.login({ id: content.id });
+        const token = await this.login({ id: content.id });
 
-        return cookie;
+        return { token };
       }
     } catch (error) {
-      console.log(error)
       throw new UnauthorizedException();
     }
 

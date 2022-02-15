@@ -84,16 +84,13 @@ export class UsersController {
   @Patch('/nickname/:id')
   async updatenickname(
     @Param('id') id: string,
-    @Body(ValidationPipe) nickname: string,
+    @Body() data: any,
   ): Promise<User> {
-    return this.userService.updateNickname(id, nickname);
+    return this.userService.updateNickname(id, data.nickname);
   }
 
   @Get('/distance/:id')
-  async getdistance(
-    @Param('id') id: string,
-    @Body() data: any,
-  ): Promise<User> {
+  async getdistance(@Param('id') id: string, @Body() data: any): Promise<User> {
     return this.userService.getDistance(id, data.id);
   }
 }

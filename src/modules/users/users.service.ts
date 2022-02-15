@@ -1,14 +1,16 @@
+/* eslint-disable operator-linebreak */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import axios from 'axios';
 import { pbkdf2Sync, randomBytes } from 'crypto';
 import { readFileSync } from 'fs';
-import moment from 'moment';
 import { Model } from 'mongoose';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './schemas/users.schema';
+
+const moment = require('moment');
 
 @Injectable()
 export class UsersService {
@@ -112,11 +114,12 @@ export class UsersService {
     const r = 6371;
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lng2 - lng1);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-      + Math.cos(deg2rad(lat1))
-        * Math.cos(deg2rad(lat2))
-        * Math.sin(dLon / 2)
-        * Math.sin(dLon / 2);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = r * c;
 
@@ -149,18 +152,28 @@ export class UsersService {
     return result;
   }
 
-  async updateNickname(id: string, nickname: string): Promise<User> {
+  async updateNickname(id: string, nickname: string): Promise<any> {
     const user = await this.userModel.findOne({ id });
     if (!user) {
       throw new Error('User not found');
-    }
-    const t1 = moment(user.lastNicknameUpdate);
-    const t2 = moment();
-    if (moment.duration(t2.diff(t1)).asDays() < 15) {
-      throw new Error('15일 이내에 닉네임 변경이 불가능합니다.');
-    }
-    const result = await user.update({ nickname });
+    } else if (user.nickname === nickname) {
+      throw new Error('동일한 닉네임으로 변경할 수 없습니다.');
+    } else if (!user.lastNicknameUpdate) {
+      await user.update({
+        lastNicknameUpdate: new Date(),
+        nickname,
+      });
 
-    return result;
+      return { message: '닉네임 변경에 성공했습니다.' };
+    } else {
+      const t1 = moment(user.lastNicknameUpdate);
+      const t2 = moment();
+      if (moment.duration(t2.diff(t1)).asDays() < 15) {
+        throw new Error('15일 이내에 닉네임 변경이 불가능합니다.');
+      }
+      const result = await user.update({ nickname });
+
+      return result;
+    }
   }
 }
