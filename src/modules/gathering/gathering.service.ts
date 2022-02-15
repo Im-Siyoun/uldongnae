@@ -47,20 +47,33 @@ export class GatheringService {
   }
 
   async update(
+    userid: string,
     id: string,
     gatheringdto: UpdateGatheringDto,
   ): Promise<Gathering> {
-    const gathering = await this.gatheringModel.findOneAndUpdate(
+    const gathering = await this.gatheringModel.findOne({ id });
+    if (!gathering) {
+      throw new Error('Gathering not found');
+    } else if (gathering.writer !== userid) {
+      throw new Error('Permission denied');
+    }
+    const result = await this.gatheringModel.findOneAndUpdate(
       { id },
       gatheringdto,
     );
 
-    return gathering;
+    return result;
   }
 
-  async delete(id: string): Promise<Gathering> {
-    const gathering = await this.gatheringModel.findOneAndDelete({ id });
+  async delete(userid: string, id: string): Promise<Gathering> {
+    const gathering = await this.gatheringModel.findOne({ id });
+    if (!gathering) {
+      throw new Error('Gathering not found');
+    } else if (gathering.writer !== userid) {
+      throw new Error('Permission denied');
+    }
+    const result = await this.gatheringModel.findOneAndDelete({ id });
 
-    return gathering;
+    return result;
   }
 }

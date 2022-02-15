@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as MongooseSchema, Types } from 'mongoose';
 
 export class Business {
   @Prop({
@@ -9,9 +10,8 @@ export class Business {
   name: string;
 
   @Prop({
-    type: String,
-    required: true,
-    unique: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
   owner: string;
 

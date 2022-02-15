@@ -37,15 +37,6 @@ export class FAQService {
     return data;
   }
 
-  async findByWriter(writer: string): Promise<FAQ> {
-    const data = await this.FAQModel.findOne({ writer });
-    if (!data) {
-      throw new Error('FAQ not found');
-    }
-
-    return data;
-  }
-
   async update(id: string, FAQdto: UpdateFAQDto): Promise<FAQ> {
     const data = await this.FAQModel.findOneAndUpdate({ id }, FAQdto);
 

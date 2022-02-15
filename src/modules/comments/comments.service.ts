@@ -31,27 +31,49 @@ export class CommentsService {
   async find(id: string): Promise<Comment> {
     const comment = await this.commentModel.findOne({ id });
     if (!comment) {
-      throw new Error('Comment not found');
+      throw new Error('댓글을 찾을 수 없습니다.');
     }
 
     return comment;
   }
 
-  async findByOriginalId(original: ObjectId): Promise<Comment[]> {
+  async findByOriginalId(original: string): Promise<Comment[]> {
     const comment = await this.commentModel.find({ original });
     if (!comment) {
-      throw new Error('Comment not found');
+      throw new Error('댓글을 찾을 수 없습니다.');
     }
 
     return comment;
   }
 
-  async update(id: string, commentdto: UpdateCommentDto): Promise<Comment> {
-    const comment = await this.commentModel.findOneAndUpdate(
+  async update(
+    userid: string,
+    id: string,
+    commentdto: UpdateCommentDto,
+  ): Promise<Comment> {
+    const comment = await this.commentModel.findOne({ id });
+    if (!comment) {
+      throw new Error('댓글을 찾을 수 없습니다.');
+    } else if (comment.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+    const result = await this.commentModel.findOneAndUpdate(
       { id },
       commentdto,
     );
 
-    return comment;
+    return result;
+  }
+
+  async delete(userid: string, id: string): Promise<Comment> {
+    const comment = await this.commentModel.findOne({ id });
+    if (!comment) {
+      throw new Error('댓글을 찾을 수 없습니다.');
+    } else if (comment.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+    const result = await this.commentModel.findOneAndDelete({ id });
+
+    return result;
   }
 }

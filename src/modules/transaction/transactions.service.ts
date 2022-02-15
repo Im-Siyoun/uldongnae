@@ -31,21 +31,41 @@ export class TransactionsService {
   async find(id: string): Promise<Transaction> {
     const transaction = await this.transactionModel.findOne({ id });
     if (!transaction) {
-      throw new Error('Transaction not found');
+      throw new Error('글을 찾지 못했습니다.');
     }
 
     return transaction;
   }
 
   async update(
+    userid: string,
     id: string,
     transactiondto: UpdateTransactionDto,
   ): Promise<Transaction> {
-    const transaction = await this.transactionModel.findOneAndUpdate(
+    const transaction = await this.transactionModel.findOne({ id });
+    if (!transaction) {
+      throw new Error('글을 찾지 못했습니다.');
+    } else if (transaction.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+
+    const result = await this.transactionModel.findOneAndUpdate(
       { id },
       transactiondto,
     );
 
-    return transaction;
+    return result;
+  }
+
+  async delete(userid: string, id: string): Promise<Transaction> {
+    const transaction = await this.transactionModel.findOne({ id });
+    if (!transaction) {
+      throw new Error('글을 찾지 못했습니다.');
+    } else if (transaction.writer !== userid) {
+      throw new Error('권한이 없습니다!');
+    }
+    const result = await this.transactionModel.findOneAndDelete({ id });
+
+    return result;
   }
 }
